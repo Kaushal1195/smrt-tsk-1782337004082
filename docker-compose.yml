@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13-alpine
+    container_name: smart-task-tracker-db
+    environment:
+      POSTGRES_DB: generated_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432" # Map host port 5433 to container port 5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d generated_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smart-task-tracker-backend
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/generated_db
+      JWT_SECRET: your_super_secret_jwt_key_replace_me_in_production
+      PORT: 5000
+    depends_on:
+      db:
+        condition: service_healthy
+    # For development, you might want to mount the volume for hot-reloading:
+    # volumes:
+    #   - ./backend:/app
+    #   - /app/node_modules # Exclude node_modules from host mount
+    # command: npm run dev # Use nodemon for development
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Pass the backend URL to the frontend build process
+        # In a production environment, this might be a public URL or a load balancer address
+        VITE_APP_BACKEND_URL: http://localhost:5000 # For local testing via host machine
+        # VITE_APP_BACKEND_URL: http://backend:5000 # For internal Docker network communication
+    container_name: smart-task-tracker-frontend
+    ports:
+      - "3000:80" # Map host port 3000 to Nginx container port 80
+    depends_on:
+      backend:
+        condition: service_started # Frontend can start even if backend isn't fully ready, but will need it for API calls
+
+volumes:
+  db-data:
