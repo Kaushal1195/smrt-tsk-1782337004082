@@ -34,8 +34,8 @@ const createTask = async (req, res) => {
                           status, priority, start_date, due_date, estimated_effort_hours, assigned_to_user_id, created_by_user_id)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
        RETURNING id, title, description, status, priority, due_date, assigned_to_user_id, created_at, updated_at`,
-      [organization_id, project_id, parent_task_id, recurring_task_id, title, description,
-        status || 'open', priority || 'medium', start_date, due_date, estimated_effort_hours, assigned_to_user_id, created_by_user_id]
+      [organization_id, project_id || null, parent_task_id || null, recurring_task_id || null, title, description,
+        status || 'open', priority || 'medium', start_date || null, due_date || null, estimated_effort_hours || null, assigned_to_user_id || null, created_by_user_id]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -218,8 +218,8 @@ const updateTask = async (req, res) => {
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $12 AND organization_id = $13
        RETURNING id, title, description, status, priority, due_date, assigned_to_user_id, created_at, updated_at`,
-      [project_id, parent_task_id, title, description, status, priority,
-        start_date, due_date, completed_at, estimated_effort_hours, assigned_to_user_id, id, organization_id]
+      [project_id || null, parent_task_id || null, title, description, status, priority,
+        start_date || null, due_date || null, completed_at || null, estimated_effort_hours || null, assigned_to_user_id || null, id, organization_id]
     );
 
     if (result.rows.length === 0) {
