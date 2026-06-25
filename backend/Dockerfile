@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copy the rest of the application code
 COPY . .
@@ -30,8 +30,5 @@ COPY --from=builder /app/package.json ./package.json
 # Expose the port the app runs on
 EXPOSE 5000
 
-# Command to run the application
-# Use a shell script to ensure migration runs before starting the server
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["docker-entrypoint.sh"]
+# Start the server
+CMD ["npm", "start"]

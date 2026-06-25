@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Database connection string
-const connectionString = 'postgresql://postgres:postgres@localhost:5433/generated_db';
+const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5433/generated_db';
 
 // Path to the SQL schema file
 // Assumes migrate.js is in 'backend/' and schema.sql is in 'database/'
