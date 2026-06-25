@@ -5,8 +5,8 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    status: 'To Do',
-    priority: 'Medium',
+    status: 'open',
+    priority: 'medium',
     due_date: '',
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +31,8 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
       setFormData({
         title: '',
         description: '',
-        status: 'To Do',
-        priority: 'Medium',
+        status: 'open',
+        priority: 'medium',
         due_date: '',
       });
     } catch (err) {
@@ -91,10 +91,11 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
                   value={formData.status}
                   onChange={handleChange}
                 >
-                  <option value="To Do">To Do</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Review">Review</option>
-                  <option value="Done">Done</option>
+                  <option value="open">To Do</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="on_hold">On Hold</option>
+                  <option value="completed">Done</option>
+                  <option value="cancelled">Cancelled</option>
                 </select>
               </div>
               
@@ -106,10 +107,10 @@ const CreateTaskModal = ({ isOpen, onClose, onTaskCreated }) => {
                   value={formData.priority}
                   onChange={handleChange}
                 >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                  <option value="Critical">Critical</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
                 </select>
               </div>
             </div>
