@@ -2,6 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./src/routes/authRoutes');
+const taskRoutes = require('./src/routes/taskRoutes');
+const projectRoutes = require('./src/routes/projectRoutes');
+const commentRoutes = require('./src/routes/commentRoutes');
+const timeEntryRoutes = require('./src/routes/timeEntryRoutes');
+const recurringTaskRoutes = require('./src/routes/recurringTaskRoutes');
+const taskDependencyRoutes = require('./src/routes/taskDependencyRoutes');
 const { query } = require('./src/db'); // Removed 'connectDb' as it's not exported from db.js
 
 const app = express();
@@ -45,6 +51,12 @@ async function initializeDatabase() {
 
 // Mount authentication routes
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/time-entries', timeEntryRoutes);
+app.use('/api/recurring-tasks', recurringTaskRoutes);
+app.use('/api/task-dependencies', taskDependencyRoutes);
 
 // Basic root route
 app.get('/', (req, res) => {
